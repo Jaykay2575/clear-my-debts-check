@@ -74,7 +74,7 @@
         <!-- Step 1: Debt Amount -->
         <div class="step active" data-step="1">
           <div class="step__content">
-            <p class="step__label">Step 1 of 3</p>
+            <p class="step__label">Step 1 of 5</p>
             <h1 class="step__title">How much do you owe<br>across all debts?</h1>
             <p class="step__subtitle">A rough estimate is fine — this helps us understand your situation.</p>
 
@@ -105,10 +105,39 @@
           </div>
         </div>
 
-        <!-- Step 2: Name -->
+        <!-- Step 2: Biggest Concern -->
         <div class="step" data-step="2">
           <div class="step__content">
-            <p class="step__label">Step 2 of 3</p>
+            <p class="step__label">Step 2 of 5</p>
+            <h2 class="step__title">What's your biggest concern right now?</h2>
+            <p class="step__subtitle">This helps us understand what matters most to you.</p>
+
+            <div class="concern-list" role="radiogroup" aria-label="Biggest concern">
+              <button type="button" class="concern-option" data-value="Falling behind on repayments">
+                <span class="concern-option__icon">&#128337;</span>
+                <span class="concern-option__text">Falling behind on repayments</span>
+              </button>
+              <button type="button" class="concern-option" data-value="Debt collectors contacting me">
+                <span class="concern-option__icon">&#128222;</span>
+                <span class="concern-option__text">Debt collectors contacting me</span>
+              </button>
+              <button type="button" class="concern-option" data-value="Struggling to keep up with bills">
+                <span class="concern-option__icon">&#128176;</span>
+                <span class="concern-option__text">Struggling to keep up with bills</span>
+              </button>
+              <button type="button" class="concern-option" data-value="Want to reduce what I pay">
+                <span class="concern-option__icon">&#128200;</span>
+                <span class="concern-option__text">I just want to pay less each month</span>
+              </button>
+            </div>
+            <input type="hidden" name="Biggest Concern" id="biggestConcern">
+          </div>
+        </div>
+
+        <!-- Step 3: Name -->
+        <div class="step" data-step="3">
+          <div class="step__content">
+            <p class="step__label">Step 3 of 5</p>
             <h2 class="step__title">What's your first name?</h2>
             <p class="step__subtitle">So we know who we're helping.</p>
 
@@ -124,17 +153,17 @@
               >
             </div>
 
-            <button type="button" class="btn btn--primary btn--next" data-next="3" disabled>
+            <button type="button" class="btn btn--primary btn--next" data-next="4" disabled>
               Continue
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
             </button>
           </div>
         </div>
 
-        <!-- Step 3: Contact -->
-        <div class="step" data-step="3">
+        <!-- Step 4: Contact + Consent -->
+        <div class="step" data-step="4">
           <div class="step__content">
-            <p class="step__label">Step 3 of 3 — almost done</p>
+            <p class="step__label">Step 4 of 5 — almost done</p>
             <h2 class="step__title">Best way to reach you?</h2>
             <p class="step__subtitle">We'll send your free assessment — no spam, ever.</p>
 
@@ -164,6 +193,15 @@
               >
             </div>
 
+            <!-- Consent -->
+            <div class="consent-box">
+              <label class="consent-toggle">
+                <input type="checkbox" id="consentCheck" name="Consent" value="Yes — I consent to being contacted">
+                <span class="consent-toggle__switch"></span>
+                <span class="consent-toggle__label">I agree to receive a call, SMS, and email from Clear My Debts about my debt options. I can opt out anytime.</span>
+              </label>
+            </div>
+
             <!-- Hidden fields for FormSubmit -->
             <input type="hidden" name="_subject" value="New Debt Check Lead">
             <input type="hidden" name="_template" value="table">
@@ -182,28 +220,42 @@
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
               <p>A debt specialist will review your situation and call within 24 hours. No pressure, no obligation.</p>
             </div>
-
-            <p class="consent-text">
-              By submitting, you agree that Clear My Debts may contact you by phone, SMS, and email about debt help options. You can opt out anytime.
-            </p>
           </div>
         </div>
 
-        <!-- Success -->
+        <!-- Step 5: Success -->
         <div class="step" data-step="done">
           <div class="step__content step__content--success">
             <div class="success-icon">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
             </div>
-            <h2 class="step__title">You're all set</h2>
+            <h2 class="step__title">You're all set<span id="successNameInline"></span></h2>
             <p class="step__subtitle success-text">
-              Thanks <span id="successName"></span>— a debt specialist will review your situation and be in touch shortly.
+              Your file has been created and assigned to your dedicated case manager.
             </p>
-            <div class="success-contact">
-              <p>Need to talk sooner?</p>
-              <a href="tel:1300998168" class="btn btn--outline">
+
+            <!-- Assigned case manager -->
+            <div class="assigned-card">
+              <div class="assigned-card__avatar">
+                <span>J</span>
+              </div>
+              <div class="assigned-card__info">
+                <p class="assigned-card__name">Joe</p>
+                <p class="assigned-card__role">Your File Manager</p>
+              </div>
+            </div>
+
+            <p class="assigned-note">
+              Joe will reach out to you shortly from <strong>0488 841 102</strong> to discuss your options. Save this number so you know it's us.
+            </p>
+
+            <div class="success-actions">
+              <a href="tel:0488841102" class="btn btn--primary">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                Call 1300 998 168
+                Call Joe now — 0488 841 102
+              </a>
+              <a href="tel:1300998168" class="btn btn--outline">
+                Or call 1300 998 168
               </a>
             </div>
           </div>

@@ -5,7 +5,7 @@
   var progressBar = document.getElementById('progressBar');
   var steps = document.querySelectorAll('.step');
   var currentStep = 1;
-  var totalSteps = 3;
+  var totalSteps = 5;
 
   // --- UTM Parameter Capture ---
   var params = new URLSearchParams(window.location.search);
@@ -51,15 +51,17 @@
       track('debt_check_step', { step_number: n, step_name: getStepName(n) });
 
       // Focus first input on new step
-      var firstInput = target.querySelector('input:not([type="hidden"])');
+      var firstInput = target.querySelector('input:not([type="hidden"]):not([type="checkbox"])');
       if (firstInput) setTimeout(function () { firstInput.focus(); }, 100);
     }
   }
 
   function getStepName(n) {
     if (n === 1) return 'debt_amount';
-    if (n === 2) return 'first_name';
-    if (n === 3) return 'contact_details';
+    if (n === 2) return 'biggest_concern';
+    if (n === 3) return 'first_name';
+    if (n === 4) return 'contact_consent';
+    if (n === 5) return 'complete';
     return 'complete';
   }
 
@@ -99,42 +101,69 @@
     });
   });
 
-  // --- Step 2: Name validation ---
+  // --- Step 2: Concern Options ---
+  var concernOptions = document.querySelectorAll('.concern-option');
+  var concernInput = document.getElementById('biggestConcern');
+
+  concernOptions.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      concernOptions.forEach(function (b) { b.classList.remove('selected'); });
+      btn.classList.add('selected');
+      var val = btn.getAttribute('data-value');
+      concernInput.value = val;
+
+      // Track concern selection
+      track('concern_selected', { concern: val });
+
+      // Auto-advance after brief pause
+      setTimeout(function () { goToStep(3); }, 600);
+    });
+  });
+
+  // --- Step 3: Name validation ---
   var firstNameInput = document.getElementById('firstName');
-  var step2NextBtn = document.querySelector('[data-next="3"]');
+  var step3NextBtn = document.querySelector('[data-next="4"]');
 
   firstNameInput.addEventListener('input', function () {
     var valid = firstNameInput.value.trim().length >= 2;
-    step2NextBtn.disabled = !valid;
+    step3NextBtn.disabled = !valid;
   });
 
   // Enter key on name field
   firstNameInput.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' && !step2NextBtn.disabled) {
+    if (e.key === 'Enter' && !step3NextBtn.disabled) {
       e.preventDefault();
-      goToStep(3);
+      goToStep(4);
     }
   });
 
-  step2NextBtn.addEventListener('click', function () {
-    goToStep(3);
+  step3NextBtn.addEventListener('click', function () {
+    goToStep(4);
   });
 
-  // --- Step 3: Contact validation ---
+  // --- Step 4: Contact + Consent validation ---
   var phoneInput = document.getElementById('phone');
   var emailInput = document.getElementById('email');
+  var consentCheck = document.getElementById('consentCheck');
   var submitBtn = document.getElementById('submitBtn');
 
-  function validateStep3() {
+  function validateStep4() {
     var phone = phoneInput.value.trim();
     var email = emailInput.value.trim();
     var phoneOk = phone.replace(/\s/g, '').length >= 8;
     var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    submitBtn.disabled = !(phoneOk && emailOk);
+    var consentOk = consentCheck.checked;
+    submitBtn.disabled = !(phoneOk && emailOk && consentOk);
   }
 
-  phoneInput.addEventListener('input', validateStep3);
-  emailInput.addEventListener('input', validateStep3);
+  phoneInput.addEventListener('input', validateStep4);
+  emailInput.addEventListener('input', validateStep4);
+  consentCheck.addEventListener('change', function () {
+    // Remove error style when they check it
+    var toggle = consentCheck.closest('.consent-toggle');
+    if (toggle) toggle.classList.remove('error');
+    validateStep4();
+  });
 
   // --- Format phone number ---
   phoneInput.addEventListener('input', function () {
@@ -144,7 +173,7 @@
       val = val.substring(0, 4) + ' ' + val.substring(4, 7) + (val.length > 7 ? ' ' + val.substring(7) : '');
     }
     phoneInput.value = val;
-    validateStep3();
+    validateStep4();
   });
 
   // --- Submit ---
@@ -161,6 +190,7 @@
     // Track submission
     track('debt_check_submitted', {
       debt_range: data.get('Total Debt'),
+      concern: data.get('Biggest Concern'),
       utm_source: utm.source,
       utm_campaign: utm.campaign
     });
@@ -171,6 +201,8 @@
       'Phone': data.get('Phone'),
       'Email': data.get('Email'),
       'Total Debt': data.get('Total Debt'),
+      'Biggest Concern': data.get('Biggest Concern') || '(not selected)',
+      'Consent': consentCheck.checked ? 'Yes — consented to contact' : 'No',
       'Source': utm.source,
       'Medium': utm.medium,
       'Campaign': utm.campaign,
@@ -202,7 +234,12 @@
   });
 
   function showSuccess(name) {
-    document.getElementById('successName').textContent = name ? name + ' ' : '';
+    // Update success screen with the user's name
+    var nameEl = document.getElementById('successNameInline');
+    if (nameEl) {
+      nameEl.textContent = name ? ', ' + name : '';
+    }
+
     progressBar.style.width = '100%';
 
     // Track completion
