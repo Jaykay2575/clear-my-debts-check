@@ -1,0 +1,447 @@
+/* ============================================
+   Clear My Debts — Quick Debt Check Form
+   Dark mode, mobile-first, teal accent
+   ============================================ */
+
+/* --- Reset & Base --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --color-bg: #0a0a0b;
+  --color-surface: #111113;
+  --color-surface-2: #1a1a1d;
+  --color-surface-3: #222225;
+  --color-border: #27272a;
+  --color-border-hover: #3f3f46;
+  --color-text: #fafafa;
+  --color-text-muted: #a1a1aa;
+  --color-text-faint: #71717a;
+  --color-primary: #14b8a6;
+  --color-primary-hover: #0d9488;
+  --color-primary-glow: rgba(20, 184, 166, 0.15);
+  --color-primary-glow-strong: rgba(20, 184, 166, 0.25);
+  --color-success: #22c55e;
+
+  --font-display: 'Cabinet Grotesk', system-ui, -apple-system, sans-serif;
+  --font-body: 'General Sans', system-ui, -apple-system, sans-serif;
+
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  --transition: 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: none;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
+  overflow-x: hidden;
+}
+
+/* --- Page Layout --- */
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
+}
+
+/* --- Header --- */
+.header {
+  padding: 16px 20px;
+  flex-shrink: 0;
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.header__logo {
+  width: 36px;
+  height: 36px;
+  display: block;
+}
+
+.header__badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-primary);
+  background: var(--color-primary-glow);
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.01em;
+}
+
+/* --- Progress Bar --- */
+.progress {
+  height: 3px;
+  background: var(--color-surface-2);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.progress__bar {
+  height: 100%;
+  width: 0%;
+  background: var(--color-primary);
+  transition: width 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- Main --- */
+.main {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 20px 20px;
+}
+
+.form {
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+}
+
+/* --- Steps --- */
+.step {
+  display: none;
+  animation: fadeUp 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.step.active {
+  display: block;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.step__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.step__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-faint);
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
+}
+
+.step__title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 5vw, 32px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+
+.step__subtitle {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin-bottom: 28px;
+  max-width: 380px;
+}
+
+/* --- Debt Amount Grid --- */
+.debt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.debt-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 16px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.debt-option:hover {
+  border-color: var(--color-border-hover);
+  background: var(--color-surface-2);
+}
+
+.debt-option:active {
+  transform: scale(0.97);
+}
+
+.debt-option.selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-glow);
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.debt-option__amount {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+}
+
+.debt-option.selected .debt-option__amount {
+  color: var(--color-primary);
+}
+
+/* --- Input Fields --- */
+.field-group {
+  margin-bottom: 16px;
+}
+
+.field-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+}
+
+.input {
+  width: 100%;
+  padding: 16px 18px;
+  font-size: 17px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: all var(--transition);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.input::placeholder {
+  color: var(--color-text-faint);
+  font-weight: 400;
+}
+
+.input:hover {
+  border-color: var(--color-border-hover);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-glow);
+}
+
+.input.error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+/* --- Buttons --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 32px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition);
+  -webkit-tap-highlight-color: transparent;
+  text-decoration: none;
+  width: 100%;
+}
+
+.btn--primary {
+  background: var(--color-primary);
+  color: #0a0a0b;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px var(--color-primary-glow-strong);
+}
+
+.btn--primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn--primary:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn--outline {
+  background: transparent;
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
+}
+
+.btn--outline:hover {
+  background: var(--color-primary-glow);
+}
+
+.btn--next {
+  margin-top: 8px;
+}
+
+.btn--submit {
+  margin-top: 8px;
+}
+
+.btn__loading { display: none; align-items: center; gap: 8px; }
+.btn.loading .btn__text { display: none; }
+.btn.loading .btn__loading { display: flex; }
+
+.spinner {
+  animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Consent --- */
+.consent-text {
+  font-size: 12px;
+  color: var(--color-text-faint);
+  line-height: 1.5;
+  margin-top: 16px;
+  text-align: center;
+  max-width: 380px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* --- Success State --- */
+.step__content--success {
+  align-items: center;
+  text-align: center;
+  padding-top: 32px;
+}
+
+.success-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: var(--color-success);
+}
+
+.success-text {
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.success-contact {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.success-contact p {
+  font-size: 14px;
+  color: var(--color-text-faint);
+}
+
+.success-contact .btn {
+  width: auto;
+  padding: 12px 24px;
+  font-size: 15px;
+}
+
+/* --- Trust Bar (Footer) --- */
+.trust-bar {
+  padding: 16px 20px;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.trust-bar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-faint);
+  white-space: nowrap;
+}
+
+.trust-item svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+/* --- Responsive --- */
+@media (min-width: 640px) {
+  .main {
+    align-items: center;
+    padding-top: 48px;
+  }
+
+  .debt-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .trust-bar__inner {
+    gap: 32px;
+  }
+
+  .trust-item {
+    font-size: 12px;
+  }
+}
+
+/* Prevent zoom on iOS inputs */
+@supports (-webkit-touch-callout: none) {
+  .input {
+    font-size: max(17px, 1rem);
+  }
+}
