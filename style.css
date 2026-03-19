@@ -91,6 +91,59 @@ body {
   letter-spacing: 0.01em;
 }
 
+/* --- Social Proof Bar --- */
+.social-proof {
+  padding: 12px 20px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.social-proof__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.social-proof__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.social-proof__number {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.social-proof__number .star {
+  color: #facc15;
+  margin-left: 1px;
+}
+
+.social-proof__label {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.social-proof__divider {
+  width: 1px;
+  height: 28px;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
 /* --- Progress Bar --- */
 .progress {
   height: 3px;
@@ -330,6 +383,55 @@ body {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* --- Savings Hint --- */
+.savings-hint {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: rgba(20, 184, 166, 0.08);
+  border: 1px solid rgba(20, 184, 166, 0.15);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--color-primary);
+  line-height: 1.5;
+  text-align: center;
+  display: none;
+  animation: fadeUp 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.savings-hint.visible {
+  display: block;
+}
+
+.savings-hint strong {
+  font-weight: 600;
+  color: #2dd4bf;
+}
+
+/* --- What Happens Next --- */
+.next-steps {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.next-steps svg {
+  flex-shrink: 0;
+  color: var(--color-primary);
+  margin-top: 1px;
+}
+
+.next-steps p {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin: 0;
 }
 
 /* --- Consent --- */

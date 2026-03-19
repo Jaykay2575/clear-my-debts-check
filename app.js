@@ -66,18 +66,36 @@
   // --- Step 1: Debt Options ---
   var debtOptions = document.querySelectorAll('.debt-option');
   var debtInput = document.getElementById('debtAmount');
+  var savingsHint = document.getElementById('savingsHint');
+
+  // Savings estimates by debt range
+  var savingsMap = {
+    'Under $5,000':        'People in your range typically save <strong>$100–$200/month</strong> with one simple payment.',
+    '$5,000 \u2013 $10,000':    'People in your range typically save <strong>$200–$400/month</strong> with a structured plan.',
+    '$10,000 \u2013 $25,000':   'People in your range typically save <strong>$300–$600/month</strong> by consolidating repayments.',
+    '$25,000 \u2013 $50,000':   'People in your range typically save <strong>$400–$900/month</strong> with a tailored plan.',
+    '$50,000 \u2013 $100,000':  'People in your range typically save <strong>$600–$1,500/month</strong> through debt negotiation.',
+    'Over $100,000':       'People in your range typically save <strong>$1,000+/month</strong> with professional debt management.'
+  };
 
   debtOptions.forEach(function (btn) {
     btn.addEventListener('click', function () {
       debtOptions.forEach(function (b) { b.classList.remove('selected'); });
       btn.classList.add('selected');
-      debtInput.value = btn.getAttribute('data-value');
+      var val = btn.getAttribute('data-value');
+      debtInput.value = val;
+
+      // Show savings estimate
+      if (savingsMap[val]) {
+        savingsHint.innerHTML = savingsMap[val];
+        savingsHint.classList.add('visible');
+      }
 
       // Track debt selection
-      track('debt_amount_selected', { debt_range: btn.getAttribute('data-value') });
+      track('debt_amount_selected', { debt_range: val });
 
-      // Brief delay then auto-advance
-      setTimeout(function () { goToStep(2); }, 250);
+      // Longer delay to let them read the savings hint
+      setTimeout(function () { goToStep(2); }, 1200);
     });
   });
 
